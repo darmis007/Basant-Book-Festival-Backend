@@ -1,0 +1,12 @@
+*.vscode
+*.pyc
+*.swp
+*.save
+*.fuse_hidden*
+*.sqlite3
+venv
+venv_apogee2021/
+apogee2021/staticfiles/
+apogee2021/static/
+apogee2021/media/
+__pycache__/
