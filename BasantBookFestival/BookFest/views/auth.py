@@ -44,7 +44,9 @@ def authenticate(request):
     try:
         user = User.objects.get(username=username)
     except User.DoesNotExist:
-        user = create_user_from_email(email)
+        return Response(
+            {"error": "Technical Issue. Please try again or contact a library official"}, status=status.HTTP_403_FORBIDDEN
+        )
 
     token = get_jwt_with_user(user)
 
@@ -52,4 +54,3 @@ def authenticate(request):
         {"token": token, "username": user.username},
         status=status.HTTP_201_CREATED,
     )
-

@@ -26,10 +26,6 @@ class Publisher(models.Model):
         return f"{self.user.username}"
 
 
-class Department(models.Model):
-    name = models.CharField(max_length=300, blank=True, null=True)
-
-
 class Buyer(models.Model):
     """
     The Buyer 's details
@@ -40,17 +36,11 @@ class Buyer(models.Model):
         related_name="buyer_profile"
     )
     name = models.CharField(max_length=100)
-    department = models.ForeignKey(
-        Department,
-        related_name="buyers",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
     contact_no = PhoneNumberField(blank=True, null=True, unique=True)
     PSRN = models.CharField(blank=True, null=True,
                             max_length=2000, unique=True)
     email = models.EmailField()
+    is_professor = models.BooleanField(default=False)
     is_complete = models.BooleanField(default=False)
 
     def __str__(self):
@@ -63,9 +53,6 @@ class Book(models.Model):
     Can be changed or updated
     """
     title = models.CharField(max_length=60)
-    image = models.ImageField(
-        upload_to="BookImages/",
-        blank=True)
     publisher = models.ForeignKey(
         Publisher,
         related_name="books",
@@ -98,43 +85,6 @@ class Book(models.Model):
         return f"{self.title} + {self.edition} + {self.publisher.name}"
 
 
-class Wishlist(models.Model):
-    """
-    Model to save a user's wishlist. 
-    Users can add/delete items from their wishlist.
-    """
-    buyer = models.OneToOneField(
-        Buyer,
-        on_delete=models.CASCADE,
-        related_name="wishlist"
-    )
-    books = models.ManyToManyField(
-        Book,
-        related_name="wishlist",
-    )
-
-    def __str__(self):
-        return f"{self.buyer.name} {self.buyer.PSRN} 's Wishlist"
-
-
-class Cart(models.Model):
-    """
-    Model to save a user's cart. 
-    Users can add/delete items from their cart.
-    """
-    buyer = models.ForeignKey(
-        Buyer,
-        on_delete=models.CASCADE,
-        related_name='my_carts',
-        null=True,
-        blank=True
-    )
-    is_ordered = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.buyer.name} {self.buyer.PSRN} 's Cart"
-
-
 class Order(models.Model):
     """
     Model to save a user's order. 
@@ -156,13 +106,6 @@ class Order(models.Model):
     )
     buyer = models.ForeignKey(
         Buyer,
-        related_name="orders",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )
-    cart = models.ForeignKey(
-        Cart,
         related_name="orders",
         on_delete=models.CASCADE,
         null=True,
