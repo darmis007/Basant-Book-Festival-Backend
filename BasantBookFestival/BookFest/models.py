@@ -73,6 +73,7 @@ class Book(models.Model):
     expected_price = models.PositiveIntegerField(
         validators=[MinValueValidator(0)], blank=False, null=False)
     description = models.CharField(max_length=2000, blank=True)
+    image = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
