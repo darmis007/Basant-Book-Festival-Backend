@@ -6,7 +6,8 @@
 *.sqlite3
 venv
 venv_apogee2021/
-apogee2021/staticfiles/
-apogee2021/static/
-apogee2021/media/
+BasantBookFestival/staticfiles/
+BasantBookFestival/static/
+BasantBookFestival/media/
 __pycache__/
+migrations/
