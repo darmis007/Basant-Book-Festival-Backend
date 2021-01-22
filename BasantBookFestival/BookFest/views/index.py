@@ -156,6 +156,15 @@ def getBooks(request, page_number):
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
+def getPublishers(request):
+    publishers = Publisher.objects.all()
+    return Response({
+        'data': publishers.values()
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
 def getBook(request, book_id):
     try:
         book = Book.objects.get(id=book_id)
@@ -288,7 +297,7 @@ def myOrders(request):
         cancelled_orders = Order.objects.filter(
             is_ordered=False, buyer__user=request.user)
         personal_orders = Order.objects.filter(
-            is_ordered=True, buyer__user=request.user,    recommended_to_library=False)
+            is_ordered=True, buyer__user=request.user, recommended_to_library=False)
         return Response({
             'library': library_orders.values(),
             'cancelled': cancelled_orders.values(),
@@ -335,8 +344,8 @@ def ordered_excel(request):
 
 
 @staff_member_required
-def ordered_publisher_excel(request, publisher_name):
-    orders = Order.objects.filter(is_ordered=True, seller__name=publisher_name)
+def orderedPublisherExcel(request, publisher_id):
+    orders = Order.objects.filter(is_ordered=True, seller__id=publisher_id)
     wb = Workbook()
     ws = wb.active
     ws["A1"] = "Order ID"
