@@ -311,7 +311,7 @@ def myOrders(request):
 
 
 @staff_member_required
-def ordered_excel(request):
+def orderedExcel(request):
     orders = Order.objects.filter(is_ordered=True)
     wb = Workbook()
     ws = wb.active
