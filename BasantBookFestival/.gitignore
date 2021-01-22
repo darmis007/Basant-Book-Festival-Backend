@@ -4,8 +4,6 @@
 *.save
 *.fuse_hidden*
 *.sqlite3
-venv
-venv_apogee2021/
 BasantBookFestival/staticfiles/
 BasantBookFestival/static/
 BasantBookFestival/media/
