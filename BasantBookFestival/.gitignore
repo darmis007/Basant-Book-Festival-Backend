@@ -4,6 +4,7 @@
 *.save
 *.fuse_hidden*
 *.sqlite3
+media/
 BasantBookFestival/staticfiles/
 BasantBookFestival/static/
 BasantBookFestival/media/
