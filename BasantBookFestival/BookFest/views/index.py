@@ -22,6 +22,8 @@ from rest_framework import status
 import os
 import re
 import datetime
+from openpyxl import *
+from openpyxl.writer.excel import save_virtual_workbook
 
 from BookFest.models import Buyer, Publisher, Book, Order
 from BookFest.helpers.auth_helpers import create_user_from_email, create_publisher_from_email
@@ -131,14 +133,14 @@ def bookRegister(request):
         book.ISBN = data['ISBN']
         book.description = data['description']
         book.discount = data['discount']
-        book.expected_price = data['expected_price']
+        #book.expected_price = data['expected_price']
         book.save()
     except KeyError as missing_data:
         response = Response(
             {'message': 'Data is Missing: {}'.format(missing_data)})
         return response
     return Response({
-        'data': book,
+        'data': book.to_dict(),
         'message': 'book created successfully'
     }, status=status.HTTP_201_CREATED,
     )
@@ -150,6 +152,18 @@ def getBooks(request, page_number):
     listBooks = Paginator(Book.objects.values(), 10)
     page = listBooks.page(page_number)
     return HttpResponse(page, content_type='application/json')
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def getBook(request, book_id):
+    try:
+        book = Book.objects.get(id=book_id)
+    except:
+        return Response({
+            'message': "Book Id "+str(book_id) + " does not exist"
+        })
+    return Response(book.to_dict(), content_type='application/json')
 
 
 @api_view(['POST'])
@@ -252,7 +266,7 @@ def cancelOrder(request):
         order = Order.objects.get(id=order_id, is_ordered=True)
     except ObjectDoesNotExist:
         return Response({
-            'message': "Order ID does not exist"
+            'message': "Order ID "+str(order.id)+" does not exist or has cancelled"
         })
     if request.user != order.buyer.user:
         return Response({
@@ -263,3 +277,91 @@ def cancelOrder(request):
     return Response({
         'message': 'Order '+str(order.id)+' cancelled succesfully by you'
     })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def myOrders(request):
+    try:
+        library_orders = Order.objects.filter(
+            is_ordered=True, buyer__user=request.user, recommended_to_library=True)
+        cancelled_orders = Order.objects.filter(
+            is_ordered=False, buyer__user=request.user)
+        personal_orders = Order.objects.filter(
+            is_ordered=True, buyer__user=request.user,    recommended_to_library=False)
+        return Response({
+            'library': library_orders.values(),
+            'cancelled': cancelled_orders.values(),
+            'personal': personal_orders.values(),
+        }, status=status.HTTP_200_OK
+        )
+    except Exception as e:
+        return Response({
+            'message': e + " has occured."
+        })
+
+
+@staff_member_required
+def ordered_excel(request):
+    orders = Order.objects.filter(is_ordered=True)
+    wb = Workbook()
+    ws = wb.active
+    ws["A1"] = "Order ID"
+    ws["B1"] = "Buyer Name"
+    ws["C1"] = "Buyer Email"
+    ws["D1"] = "Buyer PSRN"
+    ws["E1"] = "Book"
+    ws["F1"] = "Publisher"
+    ws["G1"] = "Recommended to Library"
+    ws["H1"] = "Book Price"
+    ws["I1"] = "Order Time"
+    row = 2
+    for order in orders:
+        ws["A{}".format(row)] = order.id
+        ws["B{}".format(row)] = order.buyer.name
+        ws["C{}".format(row)] = order.buyer.email
+        ws["D{}".format(row)] = order.buyer.PSRN
+        ws["E{}".format(row)] = order.book.title
+        ws["F{}".format(row)] = order.seller.name
+        ws["G{}".format(row)] = order.recommended_to_library
+        ws["H{}".format(row)] = order.book.price
+        ws["I{}".format(row)] = order.created_at
+        row += 1
+
+    response = HttpResponse(content=save_virtual_workbook(
+        wb), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response['Content-Disposition'] = "attachment; filename=Master_List_All_Orders.xlsx"
+    return response
+
+
+@staff_member_required
+def ordered_publisher_excel(request, publisher_name):
+    orders = Order.objects.filter(is_ordered=True, seller__name=publisher_name)
+    wb = Workbook()
+    ws = wb.active
+    ws["A1"] = "Order ID"
+    ws["B1"] = "Buyer Name"
+    ws["C1"] = "Buyer Email"
+    ws["D1"] = "Buyer PSRN"
+    ws["E1"] = "Book"
+    ws["F1"] = "Publisher"
+    ws["G1"] = "Recommended to Library"
+    ws["H1"] = "Book Price"
+    ws["I1"] = "Order Time"
+    row = 2
+    for order in orders:
+        ws["A{}".format(row)] = order.id
+        ws["B{}".format(row)] = order.buyer.name
+        ws["C{}".format(row)] = order.buyer.email
+        ws["D{}".format(row)] = order.buyer.PSRN
+        ws["E{}".format(row)] = order.book.title
+        ws["F{}".format(row)] = order.seller.name
+        ws["G{}".format(row)] = order.recommended_to_library
+        ws["H{}".format(row)] = order.book.price
+        ws["I{}".format(row)] = order.created_at
+        row += 1
+
+    response = HttpResponse(content=save_virtual_workbook(
+        wb), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response['Content-Disposition'] = "attachment; filename=Master_List_All_Orders.xlsx"
+    return response

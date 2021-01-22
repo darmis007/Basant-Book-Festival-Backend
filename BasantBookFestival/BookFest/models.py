@@ -20,6 +20,8 @@ class Publisher(models.Model):
     contact_no = PhoneNumberField(blank=True, null=True, unique=True)
     address = models.TextField(blank=True, null=True, max_length=2000)
     email = models.EmailField()
+    logo = models.ImageField(
+        upload_to='publisher_logos', null=True, blank=True)
     is_complete = models.BooleanField(default=False)
 
     def __str__(self):
@@ -74,6 +76,7 @@ class Book(models.Model):
         validators=[MinValueValidator(0)], blank=False, null=False)
     description = models.CharField(max_length=2000, blank=True)
     image = models.URLField(blank=True, null=True)
+    thumbnail = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -82,8 +85,33 @@ class Book(models.Model):
     # For expiring products after given expiry period.
     expired = models.BooleanField(default=False)
 
+    def to_dict(self):
+        return {
+            "pk": self.pk,
+            "title": self.title,
+            "edition": self.edition,
+            "year_of_publication": self.year_of_publication,
+            # "images": [im.url for im in self.images]
+            "price_indian_currency": self.price_indian_currency,
+            "price_indian_currency": self.price_foreign_currency,
+            "publisher": self.publisher.name,
+            "discount": self.discount,
+            "expected_price": self.expected_price,
+            "description": self.description,
+            "image": self.image,
+            "thumbnail": self.thumbnail,
+            "created_at": self.created_at,
+        }
+
     def __str__(self):
         return f"{self.title} + {self.edition} + {self.publisher.name}"
+
+    def save(self, *args, **kwargs):
+        self.expected_price = self.price_indian_currency * \
+            (1-((self.discount)/100))
+        self.image = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-M.jpg"
+        self.thumbnail = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-S.jpg"
+        super().save(*args, **kwargs)
 
 
 class Order(models.Model):
