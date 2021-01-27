@@ -135,6 +135,7 @@ def bookRegister(request):
         book.ISBN = data['ISBN']
         book.description = data['description']
         book.subject = data['subject']
+        book.suply = data['supply']
         book.discount = int(data['discount'])
         #book.expected_price = data['expected_price']
         book.save()
