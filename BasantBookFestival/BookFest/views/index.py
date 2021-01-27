@@ -155,7 +155,7 @@ def bookRegister(request):
 def getBooks(request, page_number):
     listBooks = Paginator(Book.objects.values(), 10)
     page = listBooks.page(page_number)
-    return HttpResponse(page, content_type='application/json')
+    return JsonResponse({'data':page})
 
 
 @api_view(['GET'])
