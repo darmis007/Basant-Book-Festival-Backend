@@ -171,12 +171,13 @@ def getPublishers(request):
 @permission_classes((AllowAny,))
 def getBook(request, book_id):
     try:
-        book = Book.objects.get(id=book_id)
+        book = Book.objects.filter(id=book_id)
     except:
         return Response({
             'message': "Book Id "+str(book_id) + " does not exist"
         })
-    return Response(book.to_dict(), content_type='application/json')
+    #dat = serializers.serialize('json', book)
+    return JsonResponse({'data': list(book.values())})
 
 
 def filterBooks(request, search_type):
