@@ -54,7 +54,7 @@ class Book(models.Model):
     Model to save a Publisher 's Book
     Can be changed or updated
     """
-    title = models.CharField(max_length=60)
+    title = models.CharField(max_length=600)
     publisher = models.ForeignKey(
         Publisher,
         related_name="books",
@@ -62,12 +62,12 @@ class Book(models.Model):
         null=True,
         blank=True
     )
-    author = models.CharField(max_length=300, null=True, blank=True)
+    author = models.CharField(max_length=800, null=True, blank=True)
     edition = models.CharField(max_length=50, null=True, blank=True)
     year_of_publication = models.PositiveIntegerField(blank=True, null=True)
     price_foreign_currency = models.PositiveIntegerField(blank=True, null=True)
     price_indian_currency = models.PositiveIntegerField(blank=True, null=True)
-    ISBN = models.CharField(max_length=20, null=True, blank=True)
+    ISBN = models.CharField(max_length=200, null=True, blank=True)
     stock = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(0)])
     discount = models.PositiveSmallIntegerField(
