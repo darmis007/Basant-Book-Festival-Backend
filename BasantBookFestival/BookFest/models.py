@@ -63,16 +63,17 @@ class Book(models.Model):
         blank=True
     )
     author = models.CharField(max_length=800, null=True, blank=True)
+    suply = models.CharField(max_length=800, null=True, blank=True)
     edition = models.CharField(max_length=50, null=True, blank=True)
     year_of_publication = models.PositiveIntegerField(blank=True, null=True)
-    price_foreign_currency = models.PositiveIntegerField(blank=True, null=True)
-    price_indian_currency = models.PositiveIntegerField(blank=True, null=True)
+    price_foreign_currency = models.FloatField(blank=True, null=True)
+    price_indian_currency = models.FloatField(blank=True, null=True)
     ISBN = models.CharField(max_length=200, null=True, blank=True)
     stock = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(0)])
     discount = models.PositiveSmallIntegerField(
         default=0, validators=[MaxValueValidator(100), MinValueValidator(0)])
-    expected_price = models.PositiveIntegerField(
+    expected_price = models.FloatField(
         validators=[MinValueValidator(0)], blank=False, null=False)
     description = models.CharField(max_length=2000, blank=True)
     subject = models.CharField(max_length=200, blank=True, null=True)
