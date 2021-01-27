@@ -13,6 +13,7 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -128,11 +129,11 @@ def bookRegister(request):
         book.author = data['author']
         book.edition = data['edition']
         book.year_of_publication = data['year_of_publication']
-        book.price_foreign_currency = data['price_foreign_currency']
-        book.price_indian_currency = data['price_indian_currency']
+        book.price_foreign_currency = int(data['price_foreign_currency'])
+        book.price_indian_currency = int(data['price_indian_currency'])
         book.ISBN = data['ISBN']
         book.description = data['description']
-        book.discount = data['discount']
+        book.discount = int(data['discount'])
         #book.expected_price = data['expected_price']
         book.save()
     except KeyError as missing_data:
@@ -175,6 +176,29 @@ def getBook(request, book_id):
     return Response(book.to_dict(), content_type='application/json')
 
 
+def filterBooks(request, search_type):
+    types = ["title", "author", "description"]
+    if search_type == None or search_type not in types:
+        return Response({
+            "message": "not a valid search_type"
+        }, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        data = request.data
+        if search_type == "author":
+            author_data = data['search']
+            books = Book.objects.filter(author__icontains=author_data)
+        elif search_type == "description":
+            description_data = data['search']
+            books = Book.objects.filter(
+                description__icontains=description_data)
+        elif search_type == "title":
+            title_data = data['search']
+            books = Book.objects.filter(title__icontains=title_data)
+        return Response({
+            "data": books.values()
+        }, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def placeOrder(request):
@@ -185,11 +209,11 @@ def placeOrder(request):
     except KeyError as missing_key:
         return Response({
             'message': missing_key+' id not sent'
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     except ObjectDoesNotExist:
         return Response({
             'message': 'Book is not available'
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     try:
         order = Order()
         buyer = Buyer.objects.get(user=request.user)
@@ -270,17 +294,17 @@ def cancelOrder(request):
     except KeyError:
         return Response({
             'message': "Order Id not sent"
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     try:
         order = Order.objects.get(id=order_id, is_ordered=True)
     except ObjectDoesNotExist:
         return Response({
             'message': "Order ID "+str(order.id)+" does not exist or has cancelled"
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     if request.user != order.buyer.user:
         return Response({
             'message': "You are not allowed to perform the operation"
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     order.is_ordered = False
     order.save()
     return Response({
@@ -307,7 +331,7 @@ def myOrders(request):
     except Exception as e:
         return Response({
             'message': e + " has occured."
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 @staff_member_required
