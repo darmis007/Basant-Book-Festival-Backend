@@ -76,7 +76,6 @@ class Book(models.Model):
         validators=[MinValueValidator(0)], blank=False, null=False)
     description = models.CharField(max_length=2000, blank=True)
     subject = models.CharField(max_length=200, blank=True, null=True)
-    supplier = models.CharField(max_length=200, blank=True, null=True)
     image = models.URLField(blank=True, null=True)
     thumbnail = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
