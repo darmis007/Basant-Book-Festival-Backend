@@ -130,9 +130,11 @@ def bookRegister(request):
         book.edition = data['edition']
         book.year_of_publication = data['year_of_publication']
         book.price_foreign_currency = int(data['price_foreign_currency'])
+        book.currency = str(data['currency'])
         book.price_indian_currency = int(data['price_indian_currency'])
         book.ISBN = data['ISBN']
         book.description = data['description']
+        book.subject = data['subject']
         book.discount = int(data['discount'])
         #book.expected_price = data['expected_price']
         book.save()
