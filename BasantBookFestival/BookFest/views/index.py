@@ -172,7 +172,7 @@ def getPublishers(request):
 def getAllBooks(request):
     books = Book.objects.all()
     return Response({
-        'data': publishers.values()
+        'data': books.values()
     }, status=status.HTTP_200_OK)
 
 
