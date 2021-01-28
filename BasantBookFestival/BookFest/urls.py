@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.auth import authenticate
-from .views.index import index, sign_in, sign_out, buyerRegister, publisherRegister, bookRegister, getBooks, getBook, placeOrder, cancelOrder, myOrders, getPublishers, orderedExcel, orderedPublisherExcel
+from .views.index import index, sign_in, sign_out, buyerRegister, publisherRegister, bookRegister, getBooks, getBook, filterBooks, placeOrder, cancelOrder, myOrders, getPublishers, orderedExcel, orderedPublisherExcel
 
 urlpatterns = [
     path("", index, name='index'),
@@ -13,6 +13,7 @@ urlpatterns = [
     path('publisher/list/', getPublishers, name='publisherList'),
     path('book/page/<int:page_number>/', getBooks, name='getBooks'),
     path('book/<int:book_id>/', getBook, name='getBook'),
+    path('book/filter/<str:search_type>/', filterBooks, name='filterBook'),
     path('order/place/', placeOrder, name='placeOrder'),
     path('order/cancel/', cancelOrder, name='cancelOrder'),
     path('order/my/', myOrders, name='myOrder'),

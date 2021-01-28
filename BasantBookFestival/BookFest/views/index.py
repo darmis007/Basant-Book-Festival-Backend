@@ -169,6 +169,15 @@ def getPublishers(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
+def getAllBooks(request):
+    books = Book.objects.all()
+    return Response({
+        'data': publishers.values()
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
 def getBook(request, book_id):
     try:
         book = Book.objects.filter(id=book_id)
@@ -180,8 +189,10 @@ def getBook(request, book_id):
     return JsonResponse({'data': list(book.values())})
 
 
+@api_view(['GET'])
+@permission_classes((AllowAny,))
 def filterBooks(request, search_type):
-    types = ["title", "author", "description"]
+    types = ["title", "author", "description", "subject"]
     if search_type == None or search_type not in types:
         return Response({
             "message": "not a valid search_type"
@@ -198,6 +209,9 @@ def filterBooks(request, search_type):
         elif search_type == "title":
             title_data = data['search']
             books = Book.objects.filter(title__icontains=title_data)
+        elif search_type == "subject":
+            subject_data = data['search']
+            books = Book.objects.filter(subject=subject_data)
         return Response({
             "data": books.values()
         }, status=status.HTTP_200_OK)
