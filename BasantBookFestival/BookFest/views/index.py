@@ -192,27 +192,35 @@ def getBook(request, book_id):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def filterBooks(request, search_type):
-    types = ["title", "author", "description", "subject"]
+    types = ["title", "author", "description", "subject", "publisher"]
     if search_type == None or search_type not in types:
         return Response({
             "message": "not a valid search_type"
         }, status=status.HTTP_400_BAD_REQUEST)
     else:
-        data = request.data
-        if search_type == "author":
-            author_data = data['search']
-            books = Book.objects.filter(author__icontains=author_data)
-        elif search_type == "description":
-            description_data = data['search']
-            books = Book.objects.filter(
-                description__icontains=description_data)
-        elif search_type == "title":
-            title_data = data['search']
-            books = Book.objects.filter(title__icontains=title_data)
-        elif search_type == "subject":
-            subject_data = data['search']
-            books = Book.objects.filter(subject=subject_data)
-        return JsonResponse({'data': list(books.values())})
+        try:
+            data = request.data
+            if search_type == "author":
+                author_data = data['search']
+                books = Book.objects.filter(author__icontains=author_data)
+            elif search_type == "description":
+                description_data = data['search']
+                books = Book.objects.filter(
+                    description__icontains=description_data)
+            elif search_type == "title":
+                title_data = data['search']
+                books = Book.objects.filter(title__icontains=title_data)
+            elif search_type == "subject":
+                subject_data = data['search']
+                books = Book.objects.filter(subject=subject_data)
+            elif search_type == "publisher":
+                publisher_data = data["search"]
+                books = Book.objects.filter(publisher__id=int(publisher_data))
+            return JsonResponse({'data': list(books.values())})
+        except Exception as e:
+            return Response({
+                "message": e
+            })
 
 
 @api_view(['POST'])
