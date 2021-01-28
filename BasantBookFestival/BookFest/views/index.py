@@ -212,9 +212,7 @@ def filterBooks(request, search_type):
         elif search_type == "subject":
             subject_data = data['search']
             books = Book.objects.filter(subject=subject_data)
-        return Response({
-            "data": books.values()
-        }, status=status.HTTP_200_OK)
+        return JsonResponse({'data': list(books.values())})
 
 
 @api_view(['POST'])
