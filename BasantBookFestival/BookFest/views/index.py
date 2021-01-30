@@ -178,6 +178,17 @@ def getAllBooks(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
+def getAllSubjects(request):
+    subjects = ['Civil Engineering', 'Cemical Engg', 'Chemistry', 'CS/IS',
+                'ECO.& FIN.', 'EEE', 'HSS', 'Management', 'Mathematics', 'ME',
+                'Physics', 'Physics ']
+    return Response({
+        'data': subjects
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
 def getBook(request, book_id):
     try:
         book = Book.objects.filter(id=book_id)
@@ -216,6 +227,27 @@ def filterBooks(request, search_type):
             elif search_type == "publisher":
                 publisher_data = data["search"]
                 books = Book.objects.filter(publisher__id=int(publisher_data))
+            return JsonResponse({'data': list(books.values())})
+        except Exception as e:
+            return Response({
+                "message": e
+            })
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def filterPublisherSubjectBooks(request, publisher, search_type):
+    types = ['Civil Engineering', 'Cemical Engg', 'Chemistry', 'CS/IS',
+             'ECO.& FIN.', 'EEE', 'HSS', 'Management', 'Mathematics', 'ME',
+             'Physics', 'Physics ']
+    if search_type == None or search_type not in types:
+        return Response({
+            "message": "not a valid search_type"
+        }, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        try:
+            books = Book.objects.filter(
+                publisher__id=publisher, subject=search_type)
             return JsonResponse({'data': list(books.values())})
         except Exception as e:
             return Response({
