@@ -46,6 +46,7 @@ def sign_in(request):
 
 
 @login_required(login_url='api/sign_in')
+@csrf_exempt
 def sign_out(request):
     logout(request)
     return Response({
@@ -235,7 +236,7 @@ def filterBooks(request, search_type):
             })
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes((AllowAny,))
 def filterPublisherSubjectBooks(request, publisher, search_type):
     types = ['Civil Engineering', 'Cemical Engg', 'Chemistry', 'CS/IS',
