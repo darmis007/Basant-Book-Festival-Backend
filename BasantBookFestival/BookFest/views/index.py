@@ -200,7 +200,7 @@ def getBook(request, book_id):
     return JsonResponse({'data': list(book.values())})
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes((AllowAny,))
 def filterBooks(request, search_type):
     types = ["title", "author", "description", "subject", "publisher"]
