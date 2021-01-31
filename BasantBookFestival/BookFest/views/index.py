@@ -45,7 +45,7 @@ def sign_in(request):
         return redirect('/')
 
 
-@login_required(login_url='api/sign_in')
+@permission_classes([IsAuthenticated])
 @csrf_exempt
 def sign_out(request):
     logout(request)
@@ -204,6 +204,7 @@ def getBook(request, book_id):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
+@csrf_exempt
 def filterBooks(request, search_type):
     types = ["title", "author", "description", "subject", "publisher"]
     if search_type == None or search_type not in types:
@@ -238,6 +239,7 @@ def filterBooks(request, search_type):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
+@csrf_exempt
 def filterPublisherSubjectBooks(request, publisher, search_type):
     types = ['Civil Engineering', 'Cemical Engg', 'Chemistry', 'CS/IS',
              'ECO.& FIN.', 'EEE', 'HSS', 'Management', 'Mathematics', 'ME',
