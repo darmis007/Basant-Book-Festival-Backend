@@ -48,8 +48,9 @@ def sign_in(request):
 @login_required(login_url='api/sign_in')
 def sign_out(request):
     logout(request)
-    return redirect('api/sign_in')
-
+    return Response({
+        'message':request.user.username + ' Logged out Successfully' 
+        })
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
