@@ -31,6 +31,13 @@ def authenticate(request):
         )
 
     email = id_info["email"]
+    try:
+        first_name = id_info["given_name"]
+        last_name = id_info["family_name"]
+    except Exception as e:
+        return Response({
+            'message': e
+        })
 
     # Login if user already exists.
 
@@ -51,6 +58,7 @@ def authenticate(request):
     token = get_jwt_with_user(user)
 
     return Response(
-        {"token": token, "username": user.username},
+        {"token": token, "username": user.username,
+            "first_name": first_name, "last_name": last_name},
         status=status.HTTP_201_CREATED,
     )
