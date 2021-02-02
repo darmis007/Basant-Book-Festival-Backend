@@ -117,7 +117,7 @@ def publisherRegister(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes((AllowAny,))
 def bookRegister(request):
     data = request.data
     try:
@@ -129,6 +129,7 @@ def bookRegister(request):
     try:
         book = Book()
         book.title = data['title']
+        book.link = data['link']
         book.publisher = publisher
         book.author = data['author']
         book.edition = data['edition']
