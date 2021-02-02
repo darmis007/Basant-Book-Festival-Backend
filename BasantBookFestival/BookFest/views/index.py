@@ -36,6 +36,8 @@ from BookFest.helpers.auth_helpers import create_user_from_email, create_publish
 def index(request):
     return HttpResponse('If you can see this, then the backend server is (hopefully) working. \n\t\t\t\t- Darsh Mishra')
 
+def home_index(request):
+    return redirect('https://bbf.bits-pilani.ac.in/home/')
 
 @csrf_exempt
 def sign_in(request):
@@ -261,6 +263,7 @@ def filterPublisherSubjectBooks(request, publisher, search_type):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@csrf_exempt
 def placeOrder(request):
     data = request.data
     try:
@@ -347,6 +350,7 @@ def placeOrder(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@csrf_exempt
 def cancelOrder(request):
     data = request.data
     try:
@@ -374,6 +378,7 @@ def cancelOrder(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@csrf_exempt
 def myOrders(request):
     try:
         library_orders = Order.objects.filter(

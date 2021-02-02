@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from BookFest.views.index import home_index
 
 
 urlpatterns = [
+    path('', home_index, name='home_index'),
     path('admin/', admin.site.urls),
     path('api/', include('BookFest.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
