@@ -184,9 +184,7 @@ def getAllBooks(request):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def getAllSubjects(request):
-    subjects = ['Civil Engineering', 'Cemical Engg', 'Chemistry', 'CS/IS',
-                'ECO.& FIN.', 'EEE', 'HSS', 'Management', 'Mathematics', 'ME',
-                'Physics', 'Physics ']
+    subjects = ['Humanities and Social Science', 'Mathematics', 'Management','Mechanical Engineering (ME)', 'Pharmacy', 'Physics','Computer Science (CS/IS)','Electrical and Electronic Engineering (EEE)','Chemical Engineering', 'Physics','Bio Science', 'Economics & Finance','General Reading','Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
     return Response({
         'data': subjects
     }, status=status.HTTP_200_OK)
@@ -229,7 +227,7 @@ def filterBooks(request, search_type):
                 books = Book.objects.filter(title__icontains=title_data)
             elif search_type == "subject":
                 subject_data = data['search']
-                books = Book.objects.filter(subject=subject_data)
+                books = Book.objects.filter(subject__icontains=subject_data)
             elif search_type == "publisher":
                 publisher_data = data["search"]
                 books = Book.objects.filter(publisher__id=int(publisher_data))
@@ -244,9 +242,9 @@ def filterBooks(request, search_type):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def filterPublisherSubjectBooks(request, publisher, search_type):
-    types = ['Civil Engineering', 'Cemical Engg', 'Chemistry', 'CS/IS',
-             'ECO.& FIN.', 'EEE', 'HSS', 'Management', 'Mathematics', 'ME',
-             'Physics', 'Physics ']
+    types = ['Humanities and Social Science', 'Mathematics', 'Management','Mechanical Engineering', 'Pharmacy', 'Physics','Computer Science','Electrical and Electronic Engineering','Chemical Engineering', 'Physics','Bio Science', 'Economics & Finance','General Reading','Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
+
+
     if search_type == None or search_type not in types:
         return Response({
             "message": "not a valid search_type"
@@ -254,7 +252,7 @@ def filterPublisherSubjectBooks(request, publisher, search_type):
     else:
         try:
             books = Book.objects.filter(
-                publisher__id=publisher, subject=search_type)
+                publisher__id=publisher, subject__icontains=search_type)
             return JsonResponse({'data': list(books.values())})
         except Exception as e:
             return Response({
