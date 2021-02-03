@@ -62,7 +62,7 @@ class Book(models.Model):
         null=True,
         blank=True
     )
-    link = models.URLField(blank=True, null=True)
+    link = models.URLField(max_length=500, blank=True, null=True)
     author = models.CharField(max_length=800, null=True, blank=True)
     suply = models.CharField(max_length=800, null=True, blank=True)
     edition = models.CharField(max_length=50, null=True, blank=True)
