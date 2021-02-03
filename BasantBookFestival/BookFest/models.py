@@ -38,6 +38,7 @@ class Buyer(models.Model):
         related_name="buyer_profile"
     )
     name = models.CharField(max_length=100)
+    department = models.CharField(max_length=500, null=True, blank=True)
     contact_no = PhoneNumberField(blank=True, null=True, unique=True)
     PSRN = models.CharField(blank=True, null=True,
                             max_length=2000, unique=True)

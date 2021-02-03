@@ -72,7 +72,11 @@ def buyerRegister(request):
             try:
                 PSRN = data['PSRN']
                 is_professor = data['is_professor']
-                user = create_user_from_email(email, PSRN, is_professor)
+                if 'department' in data.keys():
+                    department = data['department']
+                else:
+                    department = 'Common'
+                user = create_user_from_email(email, PSRN, is_professor, department)
                 try:
                     buyer = Buyer.objects.get(user=user)
                 except:
