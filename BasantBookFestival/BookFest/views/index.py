@@ -71,12 +71,13 @@ def buyerRegister(request):
                 return Response({'status': 0, 'message': 'Please enter a valid email address.'})
             try:
                 PSRN = data['PSRN']
+                name = data['name']
                 is_professor = data['is_professor']
                 if 'department' in data.keys():
                     department = data['department']
                 else:
                     department = 'Common'
-                user = create_user_from_email(email, PSRN, is_professor, department)
+                user = create_user_from_email(name, email, PSRN, is_professor, department)
                 try:
                     buyer = Buyer.objects.get(user=user)
                 except:

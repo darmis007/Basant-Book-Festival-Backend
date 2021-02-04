@@ -23,7 +23,7 @@ def get_jwt_with_user(user):
     return token
 
 
-def create_user_from_email(email, PSRN, is_professor, department):
+def create_user_from_email(name, email, PSRN, is_professor, department):
     username, _ = email.split("@")
     user = User(username=username, email=email)
     user.save()
@@ -31,11 +31,11 @@ def create_user_from_email(email, PSRN, is_professor, department):
     user.set_password(password)
     user.save()
     buyer = Buyer(user=user)
+    buyer.name = name
     buyer.email = email
     buyer.PSRN = PSRN
     buyer.is_professor = is_professor
     buyer.department = department
-    buyer.name = username
     buyer.save()
     return user
 
