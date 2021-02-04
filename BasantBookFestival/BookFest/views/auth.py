@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from BookFest.helpers.auth_helpers import create_user_from_email, get_jwt_with_user
-
+from BookFest.models import Buyer
 # Set up logger.
 #log = logging.getLogger("main")
 
@@ -50,15 +50,21 @@ def authenticate(request):
 
     try:
         user = User.objects.get(username=username)
+        is_professor = Buyer.objects.get(user = user).is_professor
     except User.DoesNotExist:
         return Response(
             {"error": "Technical Issue. Please try again or contact a library official"}, status=status.HTTP_403_FORBIDDEN
         )
+    except Buyer.DoesNotExist:
+        return Response(
+            {"error": "Technical Issue. Please try again or contact a library official to enable Buyer status"}, status=status.HTTP_403_FORBIDDEN
+        )
+
 
     token = get_jwt_with_user(user)
 
     return Response(
         {"token": token, "username": user.username,
-            "first_name": first_name, "last_name": last_name},
+            "first_name": first_name, "last_name": last_name, "is_professor":is_professor},
         status=status.HTTP_201_CREATED,
     )
