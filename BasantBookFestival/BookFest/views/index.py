@@ -202,7 +202,7 @@ def getAllBooks(request):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def getAllSubjects(request):
-    subjects = ['Humanities and Social Science', 'Mathematics', 'Management','Mechanical Engineering (ME)', 'Pharmacy', 'Physics','Computer Science (CS/IS)','Electrical and Electronic Engineering (EEE)','Chemical Engineering', 'Physics','Bio Science', 'Economics & Finance','General Reading','Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
+    subjects = ['Humanities and Social Science', 'Mathematics', 'Management','Mechanical Engineering', 'Pharmacy', 'Physics','Computer Science','Electrical and Electronic Engineering','Chemical Engineering', 'Physics','Bio Science', 'Economics & Finance','General Reading','Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
     return Response({
         'data': subjects
     }, status=status.HTTP_200_OK)
@@ -261,7 +261,6 @@ def filterBooks(request, search_type):
 @csrf_exempt
 def filterPublisherSubjectBooks(request, publisher, search_type):
     types = ['Humanities and Social Science', 'Mathematics', 'Management','Mechanical Engineering', 'Pharmacy', 'Physics','Computer Science','Electrical and Electronic Engineering','Chemical Engineering', 'Physics','Bio Science', 'Economics & Finance','General Reading','Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
-
 
     if search_type == None or search_type not in types:
         return Response({
