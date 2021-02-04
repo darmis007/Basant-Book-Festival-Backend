@@ -89,6 +89,20 @@ def buyerRegister(request):
                 'message': 'User '+'with '+'email '+email+' successfully created'
             })
 
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+@csrf_exempt
+def addBuyerName(request):
+    data=request.data
+    email=data['email']
+    buyer = Buyer.objects.get(email=email)
+    buyer.name = data['name']
+    buyer.contact_no = data['contact']
+    buyer.save()
+    return Response({
+                'message': 'User '+'with '+'email '+email+' and name '+buyer.name +' successfully created'
+            })
+
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
