@@ -153,9 +153,9 @@ def bookRegister(request):
         book.author = data['author']
         book.edition = data['edition']
         book.year_of_publication = data['year_of_publication']
-        book.price_foreign_currency = int(data['price_foreign_currency'])
+        book.price_foreign_currency = float(data['price_foreign_currency'])
         book.currency = str(data['currency'])
-        book.price_indian_currency = int(data['price_indian_currency'])
+        book.price_indian_currency = float(data['price_indian_currency'])
         book.ISBN = data['ISBN']
         book.description = data['description']
         book.subject = data['subject']
