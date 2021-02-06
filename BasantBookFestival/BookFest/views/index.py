@@ -36,8 +36,10 @@ from BookFest.helpers.auth_helpers import create_user_from_email, create_publish
 def index(request):
     return HttpResponse('If you can see this, then the backend server is (hopefully) working. \n\t\t\t\t- Darsh Mishra')
 
+
 def home_index(request):
     return redirect('https://bbf.bits-pilani.ac.in/home/')
+
 
 @csrf_exempt
 def sign_in(request):
@@ -52,8 +54,9 @@ def sign_in(request):
 def sign_out(request):
     logout(request)
     return Response({
-        'message':request.user.username + ' Logged out Successfully' 
-        })
+        'message': request.user.username + ' Logged out Successfully'
+    })
+
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
@@ -77,7 +80,8 @@ def buyerRegister(request):
                     department = data['department']
                 else:
                     department = 'Common'
-                user = create_user_from_email(name, email, PSRN, is_professor, department)
+                user = create_user_from_email(
+                    name, email, PSRN, is_professor, department)
                 try:
                     buyer = Buyer.objects.get(user=user)
                 except:
@@ -90,19 +94,35 @@ def buyerRegister(request):
                 'message': 'User '+'with '+'email '+email+' successfully created'
             })
 
+
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 @csrf_exempt
 def addBuyerName(request):
-    data=request.data
-    email=data['email']
+    data = request.data
+    email = data['email']
     buyer = Buyer.objects.get(email=email)
     buyer.name = data['name']
     buyer.contact_no = data['contact']
     buyer.save()
     return Response({
-                'message': 'User '+'with '+'email '+email+' and name '+buyer.name +' successfully created'
-            })
+        'message': 'User '+'with '+'email '+email+' and name '+buyer.name + ' successfully created'
+    })
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+@csrf_exempt
+def addBookLink(request):
+    data = request.data
+    isbn = data['ISBN']
+    book = Book.objects.get(ISBN=isbn)
+    book.image = data['cover']
+    book.thumbnail = data['thumbnail']
+    book.save()
+    return Response({
+        'message': "Book with ISBN:"+isbn+" updated cover image and thumbnail"
+    })
 
 
 @api_view(['POST'])
@@ -203,7 +223,8 @@ def getAllBooks(request):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def getAllSubjects(request):
-    subjects = ['Humanities and Social Science', 'Mathematics', 'Management','Mechanical Engineering', 'Pharmacy', 'Physics','Computer Science','Electrical and Electronic Engineering','Chemical Engineering', 'Physics','Bio Science', 'Economics & Finance','General Reading','Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
+    subjects = ['Humanities and Social Science', 'Mathematics', 'Management', 'Mechanical Engineering', 'Pharmacy', 'Physics', 'Computer Science', 'Electrical and Electronic Engineering',
+                'Chemical Engineering', 'Physics', 'Bio Science', 'Economics & Finance', 'General Reading', 'Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
     return Response({
         'data': subjects
     }, status=status.HTTP_200_OK)
@@ -261,7 +282,8 @@ def filterBooks(request, search_type):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def filterPublisherSubjectBooks(request, publisher, search_type):
-    types = ['Humanities and Social Science', 'Mathematics', 'Management','Mechanical Engineering', 'Pharmacy', 'Physics','Computer Science','Electrical and Electronic Engineering','Chemical Engineering', 'Physics','Bio Science', 'Economics & Finance','General Reading','Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
+    types = ['Humanities and Social Science', 'Mathematics', 'Management', 'Mechanical Engineering', 'Pharmacy', 'Physics', 'Computer Science', 'Electrical and Electronic Engineering',
+             'Chemical Engineering', 'Physics', 'Bio Science', 'Economics & Finance', 'General Reading', 'Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
 
     if search_type == None or search_type not in types:
         return Response({

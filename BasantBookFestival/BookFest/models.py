@@ -113,8 +113,8 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         self.expected_price = self.price_indian_currency * \
             (1-((self.discount)/100))
-        self.image = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-M.jpg"
-        self.thumbnail = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-S.jpg"
+        #self.image = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-M.jpg"
+        #self.thumbnail = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-S.jpg"
         super().save(*args, **kwargs)
 
 

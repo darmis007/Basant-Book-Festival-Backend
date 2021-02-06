@@ -9,3 +9,4 @@ BasantBookFestival/staticfiles/
 BasantBookFestival/static/
 BasantBookFestival/media/
 __pycache__/
+/node_modules/
