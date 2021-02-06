@@ -328,7 +328,10 @@ def placeOrder(request):
         if request.user.buyer_profile.is_professor == False:
             order.recommended_to_library = True
         else:
-            order.recommended_to_library = data['recommended']
+            if data['recommended'] == "false" or data['recommended'] == "False":
+                order.recommended_to_library = False
+            else:
+                order.recommended_to_library = True
         order.is_ordered = True
         order.save()
         return Response({
