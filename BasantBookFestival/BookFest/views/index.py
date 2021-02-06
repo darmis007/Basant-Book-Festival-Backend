@@ -116,10 +116,8 @@ def addBuyerName(request):
 def addBookLink(request):
     data = request.data
     isbn = data['ISBN']
-    book = Book.objects.get(ISBN=isbn)
-    book.image = data['cover']
-    book.thumbnail = data['thumbnail']
-    book.save()
+    book = Book.objects.filter(ISBN=isbn)
+    book.update(image=data['cover'], thumbnail=data['thumbnail'])
     return Response({
         'message': "Book with ISBN:"+isbn+" updated cover image and thumbnail"
     })
