@@ -179,6 +179,10 @@ def bookRegister(request):
         book.subject = data['subject']
         book.suply = data['supply']
         book.discount = int(data['discount'])
+        book.image = "http://covers.openlibrary.org/b/isbn/" + \
+            data['ISBN']+"-M.jpg"
+        book.thumbnail = "http://covers.openlibrary.org/b/isbn/" + \
+            data['ISBN']+"-S.jpg"
         #book.expected_price = data['expected_price']
         book.save()
     except KeyError as missing_data:
