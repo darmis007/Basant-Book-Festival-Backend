@@ -461,6 +461,9 @@ def orderedExcel(request):
     ws["H1"] = "Book Price"
     ws["I1"] = "Order Time"
     ws["J1"] = "Buyer Department"
+    ws["K1"] = "Subject"
+    ws["L1"] = "Book ISBN"
+    ws["M1"] = "BBF Book ID"
     row = 2
     for order in orders:
         ws["A{}".format(row)] = order.id
@@ -474,6 +477,8 @@ def orderedExcel(request):
         ws["I{}".format(row)] = order.created_at
         ws["J{}".format(row)] = order.buyer.department
         ws["K{}".format(row)] = order.book.subject
+        ws["L{}".format(row)] = order.book.ISBN
+        ws["M{}".format(row)] = order.book.id
 
         row += 1
 
@@ -499,6 +504,8 @@ def orderedPublisherExcel(request, publisher_id):
     ws["I1"] = "Order Time"
     ws["J1"] = "Buyer Department"
     ws["K1"] = "Book Department"
+    ws["L1"] = "Book ISBN"
+    ws["M1"] = "Book ID"
     row = 2
     for order in orders:
         ws["A{}".format(row)] = order.id
@@ -512,6 +519,8 @@ def orderedPublisherExcel(request, publisher_id):
         ws["I{}".format(row)] = order.created_at
         ws["J{}".format(row)] = order.buyer.department
         ws["K{}".format(row)] = order.book.subject
+        ws["L{}".format(row)] = order.book.ISBN
+        ws["M{}".format(row)] = order.book.id
 
         row += 1
 
