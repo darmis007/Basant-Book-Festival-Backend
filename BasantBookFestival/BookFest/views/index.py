@@ -457,6 +457,7 @@ def orderedExcel(request):
     ws["G1"] = "Recommended to Library"
     ws["H1"] = "Book Price"
     ws["I1"] = "Order Time"
+    ws["J1"] = "Buyer Department"
     row = 2
     for order in orders:
         ws["A{}".format(row)] = order.id
@@ -466,8 +467,9 @@ def orderedExcel(request):
         ws["E{}".format(row)] = order.book.title
         ws["F{}".format(row)] = order.seller.name
         ws["G{}".format(row)] = order.recommended_to_library
-        ws["H{}".format(row)] = order.book.price
+        ws["H{}".format(row)] = round(order.book.expected_price,0)
         ws["I{}".format(row)] = order.created_at
+        ws["J{}".format(row)] = order.buyer.department
         row += 1
 
     response = HttpResponse(content=save_virtual_workbook(
