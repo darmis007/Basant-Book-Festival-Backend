@@ -76,6 +76,7 @@ def buyerRegister(request):
                 PSRN = data['PSRN']
                 name = data['name']
                 is_professor = data['is_professor']
+                contact = data['contact']
                 if 'department' in data.keys():
                     department = data['department']
                 else:
@@ -84,6 +85,8 @@ def buyerRegister(request):
                     name, email, PSRN, is_professor, department)
                 try:
                     buyer = Buyer.objects.get(user=user)
+                    buyer.contact_no = data['contact']
+                    buyer.save()
                 except:
                     return Response({'status': 0, 'message': 'Not a valid User Created'})
             except KeyError as missing_data:
