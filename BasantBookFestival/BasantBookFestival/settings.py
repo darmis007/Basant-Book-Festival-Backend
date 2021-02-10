@@ -44,7 +44,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django_cookies_samesite.middleware.CookiesSameSite',
     'corsheaders.middleware.CorsMiddleware',   
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -149,8 +148,8 @@ USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-DCS_SESSION_COOKIE_SAMESITE = 'None'
-DCS_CSRF_COOKIE_SAMESITE = 'None'
+#DCS_SESSION_COOKIE_SAMESITE = 'None'
+#DCS_CSRF_COOKIE_SAMESITE = 'None'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
