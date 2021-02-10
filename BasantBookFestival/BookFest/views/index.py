@@ -470,6 +470,8 @@ def orderedExcel(request):
         ws["H{}".format(row)] = round(order.book.expected_price,0)
         ws["I{}".format(row)] = order.created_at
         ws["J{}".format(row)] = order.buyer.department
+        ws["K{}".format(row)] = order.book.subject
+
         row += 1
 
     response = HttpResponse(content=save_virtual_workbook(
@@ -492,6 +494,8 @@ def orderedPublisherExcel(request, publisher_id):
     ws["G1"] = "Recommended to Library"
     ws["H1"] = "Book Price"
     ws["I1"] = "Order Time"
+    ws["J1"] = "Buyer Department"
+    ws["K1"] = "Book Department"
     row = 2
     for order in orders:
         ws["A{}".format(row)] = order.id
@@ -501,11 +505,14 @@ def orderedPublisherExcel(request, publisher_id):
         ws["E{}".format(row)] = order.book.title
         ws["F{}".format(row)] = order.seller.name
         ws["G{}".format(row)] = order.recommended_to_library
-        ws["H{}".format(row)] = order.book.price
+        ws["H{}".format(row)] = order.book.expected_price
         ws["I{}".format(row)] = order.created_at
+        ws["J{}".format(row)] = order.buyer.department
+        ws["K{}".format(row)] = order.book.subject
+
         row += 1
 
     response = HttpResponse(content=save_virtual_workbook(
         wb), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    response['Content-Disposition'] = "attachment; filename=Master_List_All_Orders.xlsx"
+    response['Content-Disposition'] = "attachment; filename= {} Master_List_All_Orders.xlsx".format(order.seller.name)
     return response
