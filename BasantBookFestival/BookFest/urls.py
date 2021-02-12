@@ -22,4 +22,5 @@ urlpatterns = [
     path('publisher/<int:publisher_id>/order/excel/',
          orderedPublisherExcel, name="orderedPublisherExcel"),
     path('book/register/', bookRegister, name='bookRegister'),
-]
+    path('book/add/image/', addBookLink, name='addBookImage'),
+    ]
