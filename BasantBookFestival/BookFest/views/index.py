@@ -464,6 +464,8 @@ def orderedExcel(request):
     ws["K1"] = "Subject"
     ws["L1"] = "Book ISBN"
     ws["M1"] = "BBF Book ID"
+    ws["N1"] = "Book Author"
+    ws["O1"] = "Book Year of Publication"
     row = 2
     for order in orders:
         ws["A{}".format(row)] = order.id
@@ -479,6 +481,8 @@ def orderedExcel(request):
         ws["K{}".format(row)] = order.book.subject
         ws["L{}".format(row)] = order.book.ISBN
         ws["M{}".format(row)] = order.book.id
+        ws["N{}".format(row)] = order.book.author
+        ws["O{}".format(row)] = order.book.year_of_publication
 
         row += 1
 
@@ -506,6 +510,8 @@ def orderedPublisherExcel(request, publisher_id):
     ws["K1"] = "Book Department"
     ws["L1"] = "Book ISBN"
     ws["M1"] = "Book ID"
+    ws["N1"] = "Book Author"
+    ws["O1"] = "Book Year of Publication"
     row = 2
     for order in orders:
         ws["A{}".format(row)] = order.id
@@ -521,6 +527,8 @@ def orderedPublisherExcel(request, publisher_id):
         ws["K{}".format(row)] = order.book.subject
         ws["L{}".format(row)] = order.book.ISBN
         ws["M{}".format(row)] = order.book.id
+        ws["N{}".format(row)] = order.book.author
+        ws["O{}".format(row)] = order.book.year_of_publication
 
         row += 1
 
