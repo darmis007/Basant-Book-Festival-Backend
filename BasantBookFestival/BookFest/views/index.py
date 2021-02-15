@@ -475,7 +475,7 @@ def orderedExcel(request):
         ws["E{}".format(row)] = order.book.title
         ws["F{}".format(row)] = order.seller.name
         ws["G{}".format(row)] = order.recommended_to_library
-        ws["H{}".format(row)] = round(order.book.expected_price,0)
+        ws["H{}".format(row)] = round(order.book.expected_price, 0)
         ws["I{}".format(row)] = order.created_at
         ws["J{}".format(row)] = order.buyer.department
         ws["K{}".format(row)] = order.book.subject
@@ -534,5 +534,43 @@ def orderedPublisherExcel(request, publisher_id):
 
     response = HttpResponse(content=save_virtual_workbook(
         wb), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    response['Content-Disposition'] = "attachment; filename= {} Master_List_All_Orders.xlsx".format(order.seller.name)
+    response['Content-Disposition'] = "attachment; filename= {} Master_List_All_Orders.xlsx".format(
+        order.seller.name)
+    return response
+
+
+@staff_member_required
+def booksExcel(request):
+    books = Book.objects.all()
+    wb = Workbook()
+    ws = wb.active
+    ws["A1"] = "BBF Book ID"
+    ws["B1"] = "Title"
+    ws["C1"] = "Author"
+    ws["D1"] = "Edition"
+    ws["E1"] = "Publisher"
+    ws["F1"] = "ISBN"
+    ws["G1"] = "Price (After Discount)"
+    ws["H1"] = "Subject"
+    ws["I1"] = "Year of Publication"
+    ws["J1"] = "Book Link"
+
+    row = 2
+    for book in books:
+        ws["A{}".format(row)] = book.id
+        ws["B{}".format(row)] = book.title
+        ws["C{}".format(row)] = book.author
+        ws["D{}".format(row)] = book.edition
+        ws["E{}".format(row)] = book.publisher.name
+        ws["F{}".format(row)] = book.ISBN
+        ws["G{}".format(row)] = round(book.expected_price, 0)
+        ws["H{}".format(row)] = book.subject
+        ws["I{}".format(row)] = book.year_of_publication
+        ws["J{}".format(row)] = book.link
+
+        row += 1
+
+    response = HttpResponse(content=save_virtual_workbook(
+        wb), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response['Content-Disposition'] = "attachment; filename=Master_List_All_Books.xlsx"
     return response

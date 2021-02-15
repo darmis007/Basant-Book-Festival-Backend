@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.auth import authenticate
-from .views.index import index, sign_in, sign_out, buyerRegister, addBuyerName, addBookLink, publisherRegister, bookRegister, getBooks, getBook, getAllBooks, getAllSubjects, filterBooks, filterPublisherSubjectBooks, placeOrder, cancelOrder, myOrders, getPublishers, orderedExcel, orderedPublisherExcel
+from .views.index import index, sign_in, sign_out, buyerRegister, addBuyerName, addBookLink, publisherRegister, bookRegister, getBooks, getBook, getAllBooks, getAllSubjects, filterBooks, filterPublisherSubjectBooks, placeOrder, cancelOrder, myOrders, getPublishers, orderedExcel, orderedPublisherExcel, bookExcel
 
 urlpatterns = [
     path("", index, name='index'),
@@ -19,8 +19,9 @@ urlpatterns = [
     path('order/cancel/', cancelOrder, name='cancelOrder'),
     path('order/my/', myOrders, name='myOrder'),
     path('order/master/excel/', orderedExcel, name='orderedExcel'),
+    path('book/master/excel/', bookExcel, name='bookExcel'),
     path('publisher/<int:publisher_id>/order/excel/',
          orderedPublisherExcel, name="orderedPublisherExcel"),
     path('book/register/', bookRegister, name='bookRegister'),
     path('book/add/image/', addBookLink, name='addBookImage'),
-    ]
+]
