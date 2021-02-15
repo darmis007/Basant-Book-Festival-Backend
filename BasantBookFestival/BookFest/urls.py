@@ -19,7 +19,6 @@ urlpatterns = [
     path('order/cancel/', cancelOrder, name='cancelOrder'),
     path('order/my/', myOrders, name='myOrder'),
     path('order/master/excel/', orderedExcel, name='orderedExcel'),
-    path('book/master/excel/', booksExcel, name='bookExcel'),
     path('publisher/<int:publisher_id>/order/excel/',
          orderedPublisherExcel, name="orderedPublisherExcel"),
     path('book/register/', bookRegister, name='bookRegister'),

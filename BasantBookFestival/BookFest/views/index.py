@@ -539,8 +539,7 @@ def orderedPublisherExcel(request, publisher_id):
     return response
 
 
-@staff_member_required
-def booksExcel(request):
+def booksExcel():
     books = Book.objects.all()
     wb = Workbook()
     ws = wb.active
@@ -573,4 +572,6 @@ def booksExcel(request):
     response = HttpResponse(content=save_virtual_workbook(
         wb), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response['Content-Disposition'] = "attachment; filename=Master_List_All_Books.xlsx"
-    return response
+
+
+print("File Created.")
