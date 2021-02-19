@@ -15,7 +15,7 @@ services:
   web:
     container_name: BasantBookFestival
     build: .
-    command: gunicorn BasantBookFestival.wsgi:application --bind 0.0.0.0:8000 --workers=4
+    command: gunicorn BasantBookFestival.wsgi:application --bind 0.0.0.0:8000 --workers=4 --timeout 600
     env_file:
       - project.env
     ports:

@@ -23,4 +23,5 @@ urlpatterns = [
          orderedPublisherExcel, name="orderedPublisherExcel"),
     path('book/register/', bookRegister, name='bookRegister'),
     path('book/add/image/', addBookLink, name='addBookImage'),
+    path('book/all/excel/', booksExcel, name='booksExcel'),
 ]
