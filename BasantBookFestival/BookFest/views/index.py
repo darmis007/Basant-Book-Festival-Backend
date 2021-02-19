@@ -20,6 +20,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
+from celery import shared_task
+
 import os
 import re
 import datetime
@@ -227,6 +229,7 @@ def getAllBooks(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
+@shared_task
 def getAllSubjects(request):
     subjects = ['Humanities and Social Science', 'Mathematics', 'Management', 'Mechanical Engineering', 'Pharmacy', 'Physics', 'Computer Science', 'Electrical and Electronic Engineering',
                 'Chemical Engineering', 'Physics', 'Bio Science', 'Economics & Finance', 'General Reading', 'Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
@@ -251,6 +254,7 @@ def getBook(request, book_id):
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 @csrf_exempt
+@shared_task
 def filterBooks(request, search_type):
     types = ["title", "author", "description", "subject", "publisher"]
     if search_type == None or search_type not in types:
@@ -286,6 +290,7 @@ def filterBooks(request, search_type):
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 @csrf_exempt
+@shared_task
 def filterPublisherSubjectBooks(request, publisher, search_type):
     types = ['Humanities and Social Science', 'Mathematics', 'Management', 'Mechanical Engineering', 'Pharmacy', 'Physics', 'Computer Science', 'Electrical and Electronic Engineering',
              'Chemical Engineering', 'Physics', 'Bio Science', 'Economics & Finance', 'General Reading', 'Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
@@ -572,7 +577,6 @@ def booksExcel(request):
     response = HttpResponse(content=save_virtual_workbook(
         wb), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response['Content-Disposition'] = "attachment; filename=Master_List_All_Books.xlsx"
-    
 
     print("File Created.")
     return response

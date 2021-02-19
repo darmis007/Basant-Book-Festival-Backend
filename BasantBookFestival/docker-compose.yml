@@ -22,6 +22,7 @@ services:
       - 8000:8000
     depends_on:
       - db
+      - redis
     volumes:
       - staticfiles:/home/app/web/staticfiles
       - media:/home/app/web/media
@@ -38,7 +39,20 @@ services:
     depends_on:
       - web
 
+  celery:
+    build: .
+    command: celery -A BasantBookFestival worker --loglevel=INFO
+    volumes:
+      - redisdata:/home/app/web/redis
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: "redis:alpine"
+
 volumes:
   postgres-data:
   staticfiles:
   media:
+  redisdata:
