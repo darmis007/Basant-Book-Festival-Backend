@@ -39,6 +39,7 @@ from BookFest.helpers.auth_helpers import create_user_from_email, create_publish
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
+
 def index(request):
     return HttpResponse('If you can see this, then the backend server is (hopefully) working. \n\t\t\t\t- Darsh Mishra')
 
@@ -268,7 +269,7 @@ def filterBooks(request, search_type):
             data = request.data
             if cache.get(search_type+str(data['search'])):
                 bookresp = cache.get(search_type+str(data['search']))
-                return JsonResponse({'data': bookresp})
+                return JsonResponse({'data': list(bookresp.values())})
             else:
                 if search_type == "author":
                     author_data = data['search']
@@ -282,11 +283,13 @@ def filterBooks(request, search_type):
                     books = Book.objects.filter(title__icontains=title_data)
                 elif search_type == "subject":
                     subject_data = data['search']
-                    books = Book.objects.filter(subject__icontains=subject_data)
+                    books = Book.objects.filter(
+                        subject__icontains=subject_data)
                 elif search_type == "publisher":
                     publisher_data = data["search"]
-                    books = Book.objects.filter(publisher__id=int(publisher_data))
-                cache.set(search_type+str(data['search']), list(books.values()))
+                    books = Book.objects.filter(
+                        publisher__id=int(publisher_data))
+                cache.set(search_type+str(data['search']), books.values())
                 return JsonResponse({'data': list(books.values())})
         except Exception as e:
             return Response({
