@@ -26,3 +26,6 @@ gunicorn==20.0.4
 Pillow==7.2.0
 django-cors-headers==3.5.0
 sentry-sdk==0.17.3
+redis
+django-redis==4.11.0
+

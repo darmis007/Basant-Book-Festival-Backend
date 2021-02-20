@@ -14,6 +14,9 @@ from django.views.generic import ListView
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -31,6 +34,7 @@ from BookFest.helpers.auth_helpers import create_user_from_email, create_publish
 
 
 # Create your views here.
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
 def index(request):
@@ -260,23 +264,32 @@ def filterBooks(request, search_type):
     else:
         try:
             data = request.data
-            if search_type == "author":
-                author_data = data['search']
-                books = Book.objects.filter(author__icontains=author_data)
-            elif search_type == "description":
-                description_data = data['search']
-                books = Book.objects.filter(
-                    description__icontains=description_data)
-            elif search_type == "title":
-                title_data = data['search']
-                books = Book.objects.filter(title__icontains=title_data)
-            elif search_type == "subject":
-                subject_data = data['search']
-                books = Book.objects.filter(subject__icontains=subject_data)
-            elif search_type == "publisher":
-                publisher_data = data["search"]
-                books = Book.objects.filter(publisher__id=int(publisher_data))
-            return JsonResponse({'data': list(books.values())})
+            if cache.get(search_type+str(data['search'])):
+                bookresp = cache.get(search_type+str(data['search']))
+                return JsonResponse({'data': list(bookresp.values())})
+            else:
+                if search_type == "author":
+                    author_data = data['search']
+                    books = Book.objects.filter(author__icontains=author_data)
+                elif search_type == "description":
+                    description_data = data['search']
+                    books = Book.objects.filter(
+                        description__icontains=description_data)
+                elif search_type == "title":
+                    title_data = data['search']
+                    books = Book.objects.filter(title__icontains=title_data)
+                elif search_type == "subject":
+                    subject_data = data['search']
+                    books = Book.objects.filter(
+                        subject__icontains=subject_data)
+                elif search_type == "publisher":
+                    publisher_data = data["search"]
+                    books = Book.objects.filter(
+                        publisher__id=int(publisher_data))
+                print(books.values())
+                cache.set(
+                    search_type+str(data['search']), books)
+                return JsonResponse({'data': list(books.values())})
         except Exception as e:
             return Response({
                 "message": e
@@ -572,7 +585,6 @@ def booksExcel(request):
     response = HttpResponse(content=save_virtual_workbook(
         wb), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response['Content-Disposition'] = "attachment; filename=Master_List_All_Books.xlsx"
-    
 
     print("File Created.")
     return response
