@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'import_export',
     "corsheaders",
     'rest_framework',
     'BookFest.apps.BookfestConfig',
@@ -161,10 +162,10 @@ USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
+#CSRF_COOKIE_SECURE = True
+#SESSION_COOKIE_SECURE = True
+#CSRF_COOKIE_SAMESITE = 'None'
+#SESSION_COOKIE_SAMESITE = 'None'
 
 #DCS_SESSION_COOKIE_SAMESITE = 'None'
 #DCS_CSRF_COOKIE_SAMESITE = 'None'
