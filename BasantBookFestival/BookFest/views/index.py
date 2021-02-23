@@ -235,8 +235,8 @@ def getAllBooks(request):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def getAllSubjects(request):
-    subjects = ['Humanities and Social Science', 'Mathematics', 'Management', 'Mechanical Engineering', 'Pharmacy', 'Physics', 'Computer Science', 'Electrical and Electronic Engineering',
-                'Chemical Engineering', 'Physics', 'Bio Science', 'Economics & Finance', 'General Reading', 'Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
+    subjects = ['Humanities and Social Science', 'Humanities', 'Social Science', 'Mathematics', 'Management', 'Mechanical', 'Mechanical Engineering', 'Pharmacy', 'Physics', 'Computer Science', 'Electrical and Electronic Engineering',
+                'Electrical', 'Electronics', 'Chemical', 'Chemical Engineering', 'Physics', 'Bio Science', 'Economics & Finance', 'Economics', 'Finance', 'General Reading', 'Biographies', 'Fiction', 'Civil', 'Civil Engineering', 'Chemistry']
     return Response({
         'data': subjects
     }, status=status.HTTP_200_OK)
@@ -301,8 +301,8 @@ def filterBooks(request, search_type):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def filterPublisherSubjectBooks(request, publisher, search_type):
-    types = ['Humanities and Social Science', 'Mathematics', 'Management', 'Mechanical Engineering', 'Pharmacy', 'Physics', 'Computer Science', 'Electrical and Electronic Engineering',
-             'Chemical Engineering', 'Physics', 'Bio Science', 'Economics & Finance', 'General Reading', 'Biographies', 'Fictions', 'Civil Engineering', 'Chemistry']
+    types = subjects = ['Humanities and Social Science', 'Humanities', 'Social Science', 'Mathematics', 'Management', 'Mechanical', 'Mechanical Engineering', 'Pharmacy', 'Physics', 'Computer Science', 'Electrical and Electronic Engineering',
+                        'Electrical', 'Electronics', 'Chemical', 'Chemical Engineering', 'Physics', 'Bio Science', 'Economics & Finance', 'Economics', 'Finance', 'General Reading', 'Biographies', 'Fiction', 'Civil', 'Civil Engineering', 'Chemistry']
 
     if search_type == None or search_type not in types:
         return Response({
