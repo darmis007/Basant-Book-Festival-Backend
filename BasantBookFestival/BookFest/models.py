@@ -114,7 +114,7 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         self.expected_price = self.price_indian_currency * \
             (1-((self.discount)/100))
-        if self.pk is None:
+        if self.pk is not None:
             response = cover(str(self.ISBN))
             if len(response) != 0:
                 self.image = response['smallThumbnail']
