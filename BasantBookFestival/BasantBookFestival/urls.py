@@ -19,10 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from BookFest.views.index import home_index
 
+def trigger_error(request):
+    division_by_zero = 1 / 0
 
 urlpatterns = [
     path('', home_index, name='home_index'),
     path('admin/', admin.site.urls),
     path('api/', include('BookFest.urls')),
+    path('sentry-debug/', trigger_error),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
