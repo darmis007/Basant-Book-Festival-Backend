@@ -73,6 +73,19 @@ TEMPLATES = [
     },
 ]
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://15d11f38c3cb4b9d9e8848b39f9870bc@o530686.ingest.sentry.io/5650389",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
+
 CACHE_TTL = 60*1500
 
 CACHES = {
