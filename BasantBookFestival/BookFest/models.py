@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from PIL import Image
+from isbnlib import cover
 
 
 # Create your models here.
@@ -113,8 +114,14 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         self.expected_price = self.price_indian_currency * \
             (1-((self.discount)/100))
-        #self.image = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-M.jpg"
-        #self.thumbnail = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-S.jpg"
+        if self.pk is None:
+            response = cover(str(self.ISBN))
+            if len(response) != 0:
+                self.image = response['smallThumbnail']
+                self.thumbnail = response['thumbnail']
+            else:
+                self.image = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-M.jpg"
+                self.thumbnail = "http://covers.openlibrary.org/b/isbn/"+self.ISBN+"-S.jpg"
         super().save(*args, **kwargs)
 
 
